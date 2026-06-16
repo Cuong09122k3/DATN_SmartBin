@@ -1,0 +1,6 @@
+version: "1.0.0"
+dependencies:
+  espressif/esp32-camera: "^2.0.4"
+  espressif/esp-tflite-micro: "^1.1.0"
+  k0i05/esp_ssd1306: "^1.2.7"
+  idf: ">=5.0"

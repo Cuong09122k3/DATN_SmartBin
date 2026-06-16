@@ -1,0 +1,40 @@
+# ==============================================================================
+# DEFAULT CONFIGURATION FOR SMART BIN AI (ESP32-S3 N16R8)
+# This file automatically configures hardware options on the first build.
+# ==============================================================================
+
+# --- Custom Partition Table ---
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
+CONFIG_PARTITION_TABLE_OFFSET=0x8000
+
+# --- Flash Size and Frequency ---
+CONFIG_ESPTOOLPY_FLASHMODE_DIO=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="16MB"
+
+# --- External RAM (PSRAM / SPIRAM) ---
+# Required for allocating 1.5MB Tensor Arena for TinyML and camera frame buffers
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_TYPE_AUTO=y
+CONFIG_SPIRAM_SPEED_120M=y
+CONFIG_SPIRAM_BOOT_INIT=y
+CONFIG_SPIRAM_USE_MALLOC=y
+CONFIG_SPIRAM_MEMTEST=y
+
+# --- CPU Performance Optimization ---
+# Run CPU cores at 240MHz for fast image processing and AI inference
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=240
+
+# --- Compiler Optimization ---
+# Optimize for speed (-O2) to minimize AI inference delay
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+
+# --- System Stack and HTTP Server Config ---
+CONFIG_LWIP_TCP_MSS=1460
+CONFIG_LWIP_TCP_SND_BUF_DEFAULT=5760
+CONFIG_LWIP_TCP_WND_DEFAULT=5760

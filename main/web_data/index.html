@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Trash Bin Dashboard</title>
+    <link rel="stylesheet" href="/style.css?v=4.0">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Hiển thị tên đề tài, logo trường UTC và trạng thái kết nối -->
+        <header class="main-header">
+            <div class="header-title-container">
+                <img class="header-logo" src="/60_60_utc_logo.png" alt="UTC Logo">
+                <h1>Smart Trash Bin</h1>
+            </div>
+            <p class="header-subtitle">Hệ thống thùng rác phân loại thông minh</p>
+            <div class="status-container">
+                <span id="sys-status" class="status-dot status-online"></span>
+                <span id="sys-text">Online</span>
+            </div>
+        </header>
+
+        <!-- Banner cảnh báo khi bất kỳ ngăn chứa nào đã đầy rác -->
+        <div id="warning-banner" class="hidden">CẢNH BÁO: THÙNG RÁC ĐÃ ĐẦY!</div>
+
+        <div class="main-grid">
+            <!-- Cột bên trái: chức năng giám sát và các bảng điều khiển -->
+            <div class="column">
+                <!-- Hiển thị trạng thái đầy/chưa đầy -->
+                <div class="dashboard-card">
+                    <h2>Trạng thái thùng rác</h2>
+                    <div class="bin-status-row">
+                        <span>Ngăn 1 (Rác Pin/Nguy hại):</span>
+                        <span id="bin1-status" class="bin-state state-empty">CHƯA ĐẦY</span>
+                    </div>
+                    <div class="bin-status-row">
+                        <span>Ngăn 2 (Rác Thường):</span>
+                        <span id="bin2-status" class="bin-state state-empty">CHƯA ĐẦY</span>
+                    </div>
+                </div>
+
+                <!-- Chụp ảnh trực tiếp từ camera -->
+                <div class="dashboard-card">
+                    <h2>Kiểm tra trực tiếp</h2>
+                    <button id="btn-capture">Chụp ảnh thùng rác</button>
+                    <div style="margin-top:15px; text-align:center">
+                        <img id="manual-img" src="" alt="Live Capture" class="hidden">
+                    </div>
+                </div>
+
+                <!-- Bảng điều khiển thủ công -->
+                <div class="dashboard-card">
+                    <h2>Điều khiển thủ công</h2>
+                    <div class="manual-control-grid">
+                        <button id="btn-open-bin1" class="btn-open-hazardous">Ngăn 1 (Rác Pin/Nguy hại)</button>
+                        <button id="btn-open-bin2" class="btn-open-regular">Ngăn 2 (Rác Thường)</button>
+                    </div>
+                    <div id="manual-msg" class="status-message hidden" style="margin-top: 12px;"></div>
+                </div>
+
+            </div>
+
+            <!-- Cột bên phải: Giám sát kết quả và cấu hình mạng WiFi -->
+            <div class="column">
+                <!-- Kết quả phân loại và tóm tắt phiếu bầu -->
+                <div class="dashboard-card">
+                    <h2>Kết quả phân loại gần nhất</h2>
+                    <div id="prediction-result" class="prediction-text">Đang chờ rác...</div>
+                    <div id="voting-results-container">
+                        <p style="text-align:center; color: #a0a8c0;">Đang tải dữ liệu...</p>
+                    </div>
+                </div>
+
+                <!-- Ảnh xác thực AI -->
+                <div class="dashboard-card">
+                    <h2>Ảnh xác thực AI</h2>
+                    <div class="photo-grid">
+                        <div class="frame-item">
+                            <img id="ai-img-0" src="" alt="Frame 1">
+                            <span id="ai-label-0" class="frame-label">---</span>
+                        </div>
+                        <div class="frame-item">
+                            <img id="ai-img-1" src="" alt="Frame 2">
+                            <span id="ai-label-1" class="frame-label">---</span>
+                        </div>
+                        <div class="frame-item">
+                            <img id="ai-img-2" src="" alt="Frame 3">
+                            <span id="ai-label-2" class="frame-label">---</span>
+                        </div>
+                        <div class="frame-item">
+                            <img id="ai-img-3" src="" alt="Frame 4">
+                            <span id="ai-label-3" class="frame-label">---</span>
+                        </div>
+                        <div class="frame-item">
+                            <img id="ai-img-4" src="" alt="Frame 5">
+                            <span id="ai-label-4" class="frame-label">---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cấu hình WiFi -->
+                <div class="dashboard-card collapsible-panel">
+                    <div class="panel-header" id="wifi-toggle-btn">
+                        <h2>Cấu hình WiFi</h2>
+                    </div>
+                    <div id="wifi-panel-content" class="panel-content hidden">
+                        <div class="wifi-scan-section">
+                            <button id="btn-wifi-scan" class="btn-wifi-scan">Quét WiFi xung quanh</button>
+                            <div id="wifi-list" class="wifi-list-results hidden"></div>
+                        </div>
+
+                        <div class="wifi-manual-section">
+                            <div class="form-group">
+                                <label for="wifi-ssid">Tên WiFi (SSID)</label>
+                                <input type="text" id="wifi-ssid" placeholder="Tự nhập hoặc chọn bên trên...">
+                            </div>
+                            <div class="form-group">
+                                <label for="wifi-pass">Mật khẩu</label>
+                                <input type="password" id="wifi-pass" placeholder="Nhập mật khẩu WiFi...">
+                            </div>
+                            <button id="btn-wifi-connect">Kết nối WiFi</button>
+                        </div>
+
+                        <div class="divider">
+                            <span>hoặc</span>
+                        </div>
+
+                        <button id="btn-wifi-ap" class="btn-wifi-ap">Phát AP Mode (Phát WiFi)</button>
+                        <button id="btn-wifi-reset" class="btn-wifi-reset" style="margin-top: 10px;">Xóa WiFi đã lưu
+                            &amp;
+                            Reset thiết bị</button>
+                        <div id="wifi-msg" class="status-message hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin sinh viên -->
+        <footer class="footer">
+            <p><strong>Sinh viên thực hiện: Nguyễn Văn Cường | MSV: 211411021 | Lớp: Kỹ thuật điện tử - Tin học Công
+                    nghiệp 1 - K62</strong></p>
+            <p><strong>Đồ án tốt nghiệp - Trường Đại học Giao thông Vận tải (UTC)</strong></p>
+        </footer>
+    </div>
+    <script src="/script.js?v=4.0"></script>
+</body>
+
+</html>
